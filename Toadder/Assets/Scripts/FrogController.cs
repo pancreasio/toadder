@@ -7,6 +7,7 @@ public class FrogController : MonoBehaviour
     private float travelDistance;
     public LayerMask WallLayerMask;
     private TravellingObject platformObject;
+    private LaneData currentLane;
 
     // Start is called before the first frame update
     void Start()
@@ -14,6 +15,7 @@ public class FrogController : MonoBehaviour
         travelDistance = LevelData.LevelInstance.GetComponent<Grid>().cellSize.x *
                          LevelData.LevelInstance.transform.localScale.x;
         platformObject = null;
+        currentLane = null;
     }
 
     // Update is called once per frame
@@ -22,6 +24,15 @@ public class FrogController : MonoBehaviour
         if (platformObject != null)
         {
             transform.Translate(platformObject.parentLane.movementDirection * platformObject.parentLane.movementSpeed * Time.deltaTime);
+        }
+        else
+        {
+            if (currentLane != null && !currentLane.walkable)
+            {
+                Debug.Log("xd");
+                Destroy(this.gameObject);
+            }
+
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow) && !ChechIfNextToWall(Vector3.up))
@@ -50,11 +61,14 @@ public class FrogController : MonoBehaviour
 
         if (collision.gameObject.tag == "Platform")
             platformObject = collision.GetComponent<TravellingObject>();
+
+        if(collision.gameObject.tag == "Lane")
+            currentLane = collision.GetComponent<LaneData>();
     }
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        if (platformObject != null)
+        if (collision.tag == "Platform" && platformObject != null)
             platformObject = null;
     }
 }
