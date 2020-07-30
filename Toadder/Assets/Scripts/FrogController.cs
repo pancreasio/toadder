@@ -6,16 +6,24 @@ public class FrogController : MonoBehaviour
 {
     private float travelDistance;
     public LayerMask WallLayerMask;
+    private TravellingObject platformObject;
+
     // Start is called before the first frame update
     void Start()
     {
         travelDistance = LevelData.LevelInstance.GetComponent<Grid>().cellSize.x *
                          LevelData.LevelInstance.transform.localScale.x;
+        platformObject = null;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (platformObject != null)
+        {
+            transform.Translate(platformObject.parentLane.movementDirection * platformObject.parentLane.movementSpeed * Time.deltaTime);
+        }
+
         if (Input.GetKeyDown(KeyCode.UpArrow) && !ChechIfNextToWall(Vector3.up))
             transform.Translate(Vector3.up * travelDistance);
         if (Input.GetKeyDown(KeyCode.DownArrow) && !ChechIfNextToWall(Vector3.down))
@@ -39,5 +47,14 @@ public class FrogController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
             Destroy(this.gameObject);
+
+        if (collision.gameObject.tag == "Platform")
+            platformObject = collision.GetComponent<TravellingObject>();
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (platformObject != null)
+            platformObject = null;
     }
 }

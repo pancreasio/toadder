@@ -5,7 +5,7 @@ using UnityEngine;
 public class TravellingObject : MonoBehaviour
 {
     public LaneData parentLane;
-    public bool walkable;
+
     // Start is called before the first frame update
     void Start()
     {
