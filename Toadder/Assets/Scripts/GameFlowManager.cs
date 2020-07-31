@@ -20,7 +20,8 @@ public class GameFlowManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        UIManager.currentUiManager.UpdateLives();
+        UIManager.currentUiManager.UpdateScore();
     }
 
     // Update is called once per frame
@@ -32,6 +33,7 @@ public class GameFlowManager : MonoBehaviour
     public void PlayerDied()
     {
         PlayerController.playerInstance.GetComponent<PlayerController>().RespawnPlayer(LevelData.LevelInstance.GetComponent<LevelData>().playerSpawnPoint.transform.position);
+        UIManager.currentUiManager.UpdateLives();
     }
 
     public void PlayerLost()
