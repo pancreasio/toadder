@@ -9,6 +9,8 @@ public class GameFlowManager : MonoBehaviour
 
     public static GameFlowManager gameInstance;
 
+    public float levelTime;
+
     void Awake()
     {
         if (gameInstance == null)
@@ -20,14 +22,17 @@ public class GameFlowManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        levelTime = 0f;
         UIManager.currentUiManager.UpdateLives();
         UIManager.currentUiManager.UpdateScore();
+        UIManager.currentUiManager.UpdateTime();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        levelTime += Time.deltaTime;
+        UIManager.currentUiManager.UpdateTime();
     }
 
     public void PlayerDied()

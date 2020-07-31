@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,7 @@ public class UIManager : MonoBehaviour
 {
     public Text scoreText;
     public Text livesText;
+    public Text timeText;
 
     public static UIManager currentUiManager;
 
@@ -29,11 +31,20 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLives()
     {
-        livesText.text = PlayerController.playerInstance.GetComponent<PlayerController>().remainingLives.ToString();
+        string newText = "Lives: " + PlayerController.playerInstance.GetComponent<PlayerController>().remainingLives.ToString();
+        livesText.text = newText;
     }
 
     public void UpdateScore()
     {
-        scoreText.text = PlayerController.playerInstance.GetComponent<PlayerController>().score.ToString();
+        string newText = "Score: " + PlayerController.playerInstance.GetComponent<PlayerController>().score.ToString();
+        scoreText.text = newText;
+    }
+
+    public void UpdateTime()
+    {
+        string newText = "Time: ";
+        newText += Mathf.Round(GameFlowManager.gameInstance.levelTime) + "s";
+        timeText.text = newText;
     }
 }
