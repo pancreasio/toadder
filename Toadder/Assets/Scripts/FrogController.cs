@@ -5,6 +5,7 @@ using UnityEngine;
 public class FrogController : MonoBehaviour
 {
     private float travelDistance;
+    private PlayerController parentController;
     public LayerMask WallLayerMask;
     private TravellingObject platformObject;
     private LaneData currentLane;
@@ -16,6 +17,7 @@ public class FrogController : MonoBehaviour
                          LevelData.LevelInstance.transform.localScale.x;
         platformObject = null;
         currentLane = null;
+        parentController = PlayerController.playerInstance.GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
@@ -29,8 +31,7 @@ public class FrogController : MonoBehaviour
         {
             if (currentLane != null && !currentLane.walkable)
             {
-                Debug.Log("xd");
-                Destroy(this.gameObject);
+               Die();
             }
 
         }
@@ -57,7 +58,7 @@ public class FrogController : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Enemy")
-            Destroy(this.gameObject);
+            Die();
 
         if (collision.gameObject.tag == "Platform")
             platformObject = collision.GetComponent<TravellingObject>();
@@ -73,5 +74,11 @@ public class FrogController : MonoBehaviour
 
         if (collision.tag == "Lane" && currentLane != null)
             currentLane = null;
+    }
+
+    void Die()
+    {
+        parentController.ReportDeath();
+        Destroy(this.gameObject);
     }
 }

@@ -8,6 +8,7 @@ public class LevelData : MonoBehaviour
     public static GameObject LevelInstance;
 
     public Grid levelGrid;
+    public GameObject playerSpawnPoint;
 
     void Awake()
     {
@@ -16,4 +17,5 @@ public class LevelData : MonoBehaviour
         else
             Destroy(this.gameObject);
     }
+
 }
