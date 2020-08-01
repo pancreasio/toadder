@@ -72,8 +72,8 @@ public class FrogController : MonoBehaviour
         if (collision.tag == "Platform" && platformObject != null)
             platformObject = null;
 
-        if (collision.tag == "Lane" && currentLane != null)
-            currentLane = null;
+        //if (collision.tag == "Lane" && currentLane != null)
+        //    currentLane = null;
     }
 
     void Die()
