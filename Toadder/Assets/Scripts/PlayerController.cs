@@ -46,4 +46,9 @@ public class PlayerController : MonoBehaviour
         else
             GameFlowManager.gameInstance.PlayerLost();
     }
+
+    public void ReportSuccess()
+    {
+        GameFlowManager.gameInstance.PlayerDied();
+    }
 }

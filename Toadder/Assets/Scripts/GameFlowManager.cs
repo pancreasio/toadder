@@ -45,4 +45,9 @@ public class GameFlowManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void LevelCompleted()
+    {
+
+    }
 }

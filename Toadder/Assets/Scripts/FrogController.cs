@@ -65,6 +65,9 @@ public class FrogController : MonoBehaviour
 
         if(collision.gameObject.tag == "Lane")
             currentLane = collision.GetComponent<LaneData>();
+
+        if(collision.gameObject.tag == "Objective")
+            ObjectiveCompleted();
     }
 
     void OnTriggerExit2D(Collider2D collision)
@@ -79,6 +82,12 @@ public class FrogController : MonoBehaviour
     void Die()
     {
         parentController.ReportDeath();
+        Destroy(this.gameObject);
+    }
+
+    void ObjectiveCompleted()
+    {
+        parentController.ReportSuccess();
         Destroy(this.gameObject);
     }
 }
