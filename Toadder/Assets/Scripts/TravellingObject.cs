@@ -15,12 +15,18 @@ public class TravellingObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(parentLane.movementDirection * parentLane.movementSpeed * Time.deltaTime);
+        transform.Translate(/*parentLane.movementDirection **/ Vector3.left * parentLane.movementSpeed * Time.deltaTime);
     }
 
     void OnTriggerEnter2D(Collider2D collsion)
     {
         if (collsion.tag == "LaneLimit")
-            transform.position = parentLane.laneSpawner.transform.position;
+        {
+            Vector3 newPosition = parentLane.laneLimit.transform.position;
+            newPosition.x = -newPosition.x;
+            transform.position = newPosition;
+
+        }
+
     }
 }
