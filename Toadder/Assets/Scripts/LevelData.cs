@@ -13,10 +13,12 @@ public class LevelData : MonoBehaviour
 
     void Awake()
     {
-        if (LevelInstance == null)
-            LevelInstance = this.gameObject;
-        else
-            Destroy(this.gameObject);
+        LevelInstance = this.gameObject;
+    }
+
+    void Start()
+    {
+        GameFlowManager.gameInstance.StartGame();
     }
 
     public void UpdateObjectives()

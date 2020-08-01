@@ -9,10 +9,18 @@ public class GameFlowManager : MonoBehaviour
 
     public static GameFlowManager gameInstance;
 
+    public int SplashScreenIndex;
+    public int MenuSceneIndex;
+    public int GameOverSceneIndex;
+    public List<int> LevelIndexList;
+    private int currentSceneIndex;
+
     public float levelTime;
 
     void Awake()
     {
+        DontDestroyOnLoad(this.gameObject);
+
         if (gameInstance == null)
             gameInstance = this;
         else
@@ -22,32 +30,81 @@ public class GameFlowManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         levelTime = 0f;
-        UIManager.currentUiManager.UpdateLives();
-        UIManager.currentUiManager.UpdateScore();
-        UIManager.currentUiManager.UpdateTime();
+        foreach (int i in LevelIndexList)
+        {
+            if (i == currentSceneIndex)
+            {
+                PlayerDied();
+                SyncWithCurrentLevel();
+                break;
+            }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         levelTime += Time.deltaTime;
-        UIManager.currentUiManager.UpdateTime();
+        if(UIManager.currentUiManager != null)
+            UIManager.currentUiManager.UpdateTime();
     }
 
     public void PlayerDied()
     {
-        PlayerController.playerInstance.GetComponent<PlayerController>().RespawnPlayer(LevelData.LevelInstance.GetComponent<LevelData>().playerSpawnPoint.transform.position);
-        UIManager.currentUiManager.UpdateLives();
+        if(PlayerController.playerInstance != null && LevelData.LevelInstance != null)
+            PlayerController.playerInstance.GetComponent<PlayerController>().RespawnPlayer(LevelData.LevelInstance.GetComponent<LevelData>().playerSpawnPoint.transform.position);
+
+        if(UIManager.currentUiManager !=null)
+            UIManager.currentUiManager.UpdateLives();
+    }
+
+    private void SyncWithCurrentLevel()
+    {
+        if (UIManager.currentUiManager != null)
+        {
+            UIManager.currentUiManager.UpdateLives();
+            UIManager.currentUiManager.UpdateScore();
+            UIManager.currentUiManager.UpdateTime();
+        }
     }
 
     public void PlayerLost()
     {
-        Application.Quit();
+        GoToMenu();
     }
 
     public void LevelCompleted()
     {
+        GoToMenu();
+    }
 
+    public void GoToMenu()
+    {
+        ChangeScene(MenuSceneIndex);
+    }
+
+    public void GoToFirstLevel()
+    {
+        ChangeScene(LevelIndexList[0]);
+    }
+
+    public void StartGame()
+    {
+        PlayerDied();
+        SyncWithCurrentLevel();
+    }
+
+    public void GoToGameOver()
+    {
+        ChangeScene(GameOverSceneIndex);
+    }
+
+    private void ChangeScene(int nextSceneIndex)
+    {
+        levelTime = 0f;
+        currentSceneIndex = nextSceneIndex;
+        SceneManager.LoadScene(nextSceneIndex);
     }
 }

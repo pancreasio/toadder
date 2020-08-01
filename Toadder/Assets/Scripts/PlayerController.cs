@@ -16,13 +16,29 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
+        DontDestroyOnLoad(this.gameObject);
+
         if (playerInstance == null)
+        {
             playerInstance = this.gameObject;
+            Restart();
+        }
         else
             Destroy(this.gameObject);
     }
 
     void Start()
+    {
+        //Restart();
+    }
+
+    public void Restart()
+    {
+        TopUpLives();
+        score = 0;
+    }
+
+    private void TopUpLives()
     {
         remainingLives = maxLives;
     }
@@ -44,11 +60,16 @@ public class PlayerController : MonoBehaviour
         if (remainingLives > 0)
             GameFlowManager.gameInstance.PlayerDied();
         else
+        {
+            TopUpLives();
             GameFlowManager.gameInstance.PlayerLost();
+        }
+
     }
 
     public void ReportSuccess()
     {
+        TopUpLives();
         GameFlowManager.gameInstance.PlayerDied();
     }
 }
