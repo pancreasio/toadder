@@ -15,7 +15,7 @@ public class TravellingObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(/*parentLane.movementDirection **/ Vector3.left * parentLane.movementSpeed * Time.deltaTime);
+        transform.Translate(parentLane.movementDirection * parentLane.movementSpeed * Time.deltaTime);
     }
 
     void OnTriggerEnter2D(Collider2D collsion)

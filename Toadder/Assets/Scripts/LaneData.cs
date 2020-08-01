@@ -24,13 +24,23 @@ public class LaneData : MonoBehaviour
                 Vector3 newPosition = new Vector3(i * 2 * Mathf.Abs(laneLimit.transform.position.x) / enemyCount - positionOffset,
                     transform.position.y, transform.position.z);
 
-                Quaternion newRotation = new Quaternion(0f,0f,1f, 270f);
+                Quaternion newRotation = Quaternion.identity;
                 if (movementDirection.x > 0f)
                 {
-                    newRotation = Quaternion.Euler(0f, 0f, 180f);
+                    //newRotation = Quaternion.Euler(0f, 0f, 180f);
                 }
 
-                Instantiate(enemyPrefab, newPosition, newRotation).GetComponent<TravellingObject>().parentLane = this;
+                Vector3 newScale = Vector3.one;
+                if (movementDirection.x > 0f)
+                {
+                    newScale.x = -newScale.x;
+                }
+                GameObject spawnedObject = Instantiate(enemyPrefab, newPosition, newRotation);
+                spawnedObject.GetComponent<TravellingObject>().parentLane = this;
+                if (movementDirection.x > 0f)
+                {
+                   spawnedObject.transform.localScale = new Vector3(-spawnedObject.transform.localScale.x, spawnedObject.transform.localScale.y, spawnedObject.transform.localScale.z);
+                }
             }
         }
     }
