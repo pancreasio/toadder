@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Cinemachine;
 using UnityEngine;
 
 public class LevelData : MonoBehaviour
@@ -9,6 +10,7 @@ public class LevelData : MonoBehaviour
 
     public Grid levelGrid;
     public GameObject playerSpawnPoint;
+    public CinemachineVirtualCamera FollowCamera;
     public List<Objective> objectiveList;
 
     void Awake()
@@ -31,6 +33,11 @@ public class LevelData : MonoBehaviour
         }
         if(completedObjectives >= objectiveList.Count)
             GameFlowManager.gameInstance.LevelCompleted();
+    }
+
+    public void ResetCameraTarget(GameObject followTarget)
+    {
+        FollowCamera.Follow = followTarget.transform;
     }
 
 }

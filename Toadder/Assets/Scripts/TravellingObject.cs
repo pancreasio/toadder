@@ -17,4 +17,10 @@ public class TravellingObject : MonoBehaviour
     {
         transform.Translate(parentLane.movementDirection * parentLane.movementSpeed * Time.deltaTime);
     }
+
+    void OnTriggerEnter2D(Collider2D collsion)
+    {
+        if (collsion.tag == "LaneLimit")
+            transform.position = parentLane.laneSpawner.transform.position;
+    }
 }

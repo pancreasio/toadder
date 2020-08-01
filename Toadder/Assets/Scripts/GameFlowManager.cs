@@ -32,15 +32,15 @@ public class GameFlowManager : MonoBehaviour
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         levelTime = 0f;
-        foreach (int i in LevelIndexList)
-        {
-            if (i == currentSceneIndex)
-            {
-                PlayerDied();
-                SyncWithCurrentLevel();
-                break;
-            }
-        }
+        //foreach (int i in LevelIndexList)
+        //{
+        //    if (i == currentSceneIndex)
+        //    {
+        //        PlayerDied();
+        //        SyncWithCurrentLevel();
+        //        break;
+        //    }
+        //}
     }
 
     // Update is called once per frame
@@ -53,8 +53,12 @@ public class GameFlowManager : MonoBehaviour
 
     public void PlayerDied()
     {
-        if(PlayerController.playerInstance != null && LevelData.LevelInstance != null)
-            PlayerController.playerInstance.GetComponent<PlayerController>().RespawnPlayer(LevelData.LevelInstance.GetComponent<LevelData>().playerSpawnPoint.transform.position);
+        if (PlayerController.playerInstance != null && LevelData.LevelInstance != null)
+        {
+            LevelData.LevelInstance.GetComponent<LevelData>().ResetCameraTarget(
+                PlayerController.playerInstance.GetComponent<PlayerController>().RespawnPlayer(LevelData.LevelInstance
+                .GetComponent<LevelData>().playerSpawnPoint.transform.position));
+        }
 
         if(UIManager.currentUiManager !=null)
             UIManager.currentUiManager.UpdateLives();

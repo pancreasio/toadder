@@ -49,9 +49,9 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    public void RespawnPlayer(Vector3 respawnPosition)
+    public GameObject RespawnPlayer(Vector3 respawnPosition)
     {
-       Instantiate(FrogPrefab, respawnPosition, Quaternion.identity, transform);
+       return Instantiate(FrogPrefab, respawnPosition, Quaternion.identity, transform);
     }
 
     public void ReportDeath()
