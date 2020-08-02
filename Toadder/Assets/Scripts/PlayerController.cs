@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public int score;
 
     public GameObject FrogPrefab;
+    private GameObject FrogInstance;
 
     // Start is called before the first frame update
     private void Awake()
@@ -51,7 +52,8 @@ public class PlayerController : MonoBehaviour
 
     public GameObject RespawnPlayer(Vector3 respawnPosition)
     {
-       return Instantiate(FrogPrefab, respawnPosition, Quaternion.identity, transform);
+        FrogInstance = Instantiate(FrogPrefab, respawnPosition, Quaternion.identity, transform);
+        return FrogInstance;
     }
 
     public void ReportDeath()
@@ -71,5 +73,11 @@ public class PlayerController : MonoBehaviour
     {
         TopUpLives();
         GameFlowManager.gameInstance.PlayerDied();
+    }
+
+    public void DestroyPlayer()
+    {
+        if(FrogInstance != null)
+            Destroy(FrogInstance);
     }
 }

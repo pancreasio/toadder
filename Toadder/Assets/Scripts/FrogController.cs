@@ -23,18 +23,18 @@ public class FrogController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (platformObject != null)
-        //{
-        //    transform.Translate(platformObject.parentLane.movementDirection * platformObject.parentLane.movementSpeed * Time.deltaTime);
-        //}
-        //else
-        //{
-        //    if (currentLane != null && !currentLane.walkable)
-        //    {
-        //       Die();
-        //    }
+        if (platformObject != null)
+        {
+            transform.Translate(platformObject.parentLane.movementDirection * platformObject.parentLane.movementSpeed * Time.deltaTime);
+        }
+        else
+        {
+            if (currentLane != null && !currentLane.walkable)
+            {
+                Die();
+            }
 
-        //}
+        }
 
         if (Input.GetKeyDown(KeyCode.UpArrow) && !ChechIfNextToWall(Vector3.up))
             transform.Translate(Vector3.up * travelDistance);
@@ -46,21 +46,20 @@ public class FrogController : MonoBehaviour
             transform.Translate(Vector3.right * -travelDistance);
     }
 
-    void LateUpdate()
-    {
-        if (platformObject != null)
-        {
-            transform.Translate(platformObject.parentLane.movementDirection * platformObject.parentLane.movementSpeed * Time.deltaTime);
-        }
-        else
-        {
-            if (currentLane != null && !currentLane.walkable)
-            {
-                Debug.Log("it happened");
-                Die();
-            }
-        }
-    }
+    //void LateUpdate()
+    //{
+    //    if (platformObject != null)
+    //    {
+    //        transform.Translate(platformObject.parentLane.movementDirection * platformObject.parentLane.movementSpeed * Time.deltaTime);
+    //    }
+    //    else
+    //    {
+    //        if (currentLane != null && !currentLane.walkable)
+    //        {
+    //            Die();
+    //        }
+    //    }
+    //}
 
     bool ChechIfNextToWall(Vector3 movementDirection)
     {

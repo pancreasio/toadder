@@ -40,6 +40,9 @@ public class GameFlowManager : MonoBehaviour
         levelTime += Time.deltaTime;
         if(UIManager.currentUiManager != null)
             UIManager.currentUiManager.UpdateTime();
+
+        if(Input.GetKeyDown(KeyCode.M))
+            GoToMenu();
     }
 
     public void PlayerDied()
@@ -99,6 +102,9 @@ public class GameFlowManager : MonoBehaviour
     private void ChangeScene(int nextSceneIndex)
     {
         levelTime = 0f;
+        if(PlayerController.playerInstance != null)
+            PlayerController.playerInstance.GetComponent<PlayerController>().DestroyPlayer();
+
         currentSceneIndex = nextSceneIndex;
         SceneManager.LoadScene(nextSceneIndex);
     }
