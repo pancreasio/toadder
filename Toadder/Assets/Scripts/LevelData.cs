@@ -8,6 +8,9 @@ public class LevelData : MonoBehaviour
 {
     public static GameObject LevelInstance;
 
+    public int NextLevelSceneIndex;
+    public bool IsFinalLevel;
+
     public Grid levelGrid;
     public GameObject playerSpawnPoint;
     public CinemachineVirtualCamera FollowCamera;

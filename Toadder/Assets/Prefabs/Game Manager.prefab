@@ -45,6 +45,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SplashScreenIndex: 0
   MenuSceneIndex: 0
-  GameOverSceneIndex: 4
-  LevelIndexList: 01000000
+  GameOverSceneIndex: 1
+  FirstLevelIndex: 2
   levelTime: 0

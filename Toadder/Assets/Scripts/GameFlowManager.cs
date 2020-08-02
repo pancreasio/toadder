@@ -12,7 +12,7 @@ public class GameFlowManager : MonoBehaviour
     public int SplashScreenIndex;
     public int MenuSceneIndex;
     public int GameOverSceneIndex;
-    public List<int> LevelIndexList;
+    public int FirstLevelIndex;
     private int currentSceneIndex;
 
     public float levelTime;
@@ -43,6 +43,8 @@ public class GameFlowManager : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.M))
             GoToMenu();
+        if (Input.GetKeyDown(KeyCode.N))
+            GoToNextLevel();
     }
 
     public void PlayerDied()
@@ -70,12 +72,15 @@ public class GameFlowManager : MonoBehaviour
 
     public void PlayerLost()
     {
-        GoToMenu();
+        GoToGameOver();
     }
 
     public void LevelCompleted()
     {
-        GoToMenu();
+        if (LevelData.LevelInstance.GetComponent<LevelData>().IsFinalLevel)
+            GoToGameOver();
+        else
+            GoToNextLevel();
     }
 
     public void GoToMenu()
@@ -85,7 +90,12 @@ public class GameFlowManager : MonoBehaviour
 
     public void GoToFirstLevel()
     {
-        ChangeScene(LevelIndexList[0]);
+        ChangeScene(FirstLevelIndex);
+    }
+
+    public void GoToNextLevel()
+    {
+        ChangeScene(LevelData.LevelInstance.GetComponent<LevelData>().NextLevelSceneIndex);
     }
 
     public void StartGame()
