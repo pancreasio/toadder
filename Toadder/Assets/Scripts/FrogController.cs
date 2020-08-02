@@ -9,6 +9,11 @@ public class FrogController : MonoBehaviour
     public LayerMask WallLayerMask;
     private TravellingObject platformObject;
     private LaneData currentLane;
+    private float maxHeight;
+
+    public static event GameFlowManager.GameplayEvent OnNewHeight;
+    public static event GameFlowManager.GameplayEvent OnObjectiveComplete;
+
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +23,7 @@ public class FrogController : MonoBehaviour
         platformObject = null;
         currentLane = null;
         parentController = PlayerController.playerInstance.GetComponent<PlayerController>();
+        maxHeight = transform.position.y;
     }
 
     // Update is called once per frame
@@ -36,14 +42,24 @@ public class FrogController : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow) && !ChechIfNextToWall(Vector3.up))
-            transform.Translate(Vector3.up * travelDistance);
-        if (Input.GetKeyDown(KeyCode.DownArrow) && !ChechIfNextToWall(Vector3.down))
-            transform.Translate(Vector3.up * -travelDistance);
-        if (Input.GetKeyDown(KeyCode.RightArrow) && !ChechIfNextToWall(Vector3.right))
-            transform.Translate(Vector3.right * travelDistance);
-        if (Input.GetKeyDown(KeyCode.LeftArrow) && !ChechIfNextToWall(Vector3.left))
-            transform.Translate(Vector3.right * -travelDistance);
+        if (transform.position.y > maxHeight)
+        {
+            maxHeight = transform.position.y;
+            OnNewHeight.Invoke();
+        }
+
+        if (Time.timeScale != 0f)
+        {
+            if (Input.GetKeyDown(KeyCode.UpArrow) && !ChechIfNextToWall(Vector3.up))
+                transform.Translate(Vector3.up * travelDistance);
+            if (Input.GetKeyDown(KeyCode.DownArrow) && !ChechIfNextToWall(Vector3.down))
+                transform.Translate(Vector3.up * -travelDistance);
+            if (Input.GetKeyDown(KeyCode.RightArrow) && !ChechIfNextToWall(Vector3.right))
+                transform.Translate(Vector3.right * travelDistance);
+            if (Input.GetKeyDown(KeyCode.LeftArrow) && !ChechIfNextToWall(Vector3.left))
+                transform.Translate(Vector3.right * -travelDistance);
+
+        }
     }
 
     //void LateUpdate()
@@ -78,10 +94,10 @@ public class FrogController : MonoBehaviour
         if (collision.gameObject.tag == "Platform")
             platformObject = collision.GetComponent<TravellingObject>();
 
-        if(collision.gameObject.tag == "Lane")
+        if (collision.gameObject.tag == "Lane")
             currentLane = collision.GetComponent<LaneData>();
 
-        if(collision.gameObject.tag == "Objective")
+        if (collision.gameObject.tag == "Objective")
             ObjectiveCompleted();
     }
 
@@ -108,7 +124,10 @@ public class FrogController : MonoBehaviour
 
     void ObjectiveCompleted()
     {
-        parentController.ReportSuccess();
+        if (OnObjectiveComplete != null)
+            OnObjectiveComplete.Invoke();
+
+        //parentController.ReportSuccess();
         Destroy(this.gameObject);
     }
 }

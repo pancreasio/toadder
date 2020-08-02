@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     public GameObject FrogPrefab;
     private GameObject FrogInstance;
 
+    public static event GameFlowManager.GameplayEvent OnScoredPoints;
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -30,6 +32,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        FrogController.OnObjectiveComplete += ReportSuccess;
+        FrogController.OnNewHeight += AdvancedOnLevel;
         //Restart();
     }
 
@@ -69,10 +73,27 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void ReportSuccess()
+    void ReportSuccess()
     {
         TopUpLives();
+        ScorePoints(400);
         GameFlowManager.gameInstance.PlayerDied();
+    }
+
+    void AdvancedOnLevel()
+    {
+        ScorePoints(10);
+    }
+
+    void ScorePoints(int points)
+    {
+        score += points;
+        OnScoredPoints.Invoke();
+    }
+
+    public int GetScore()
+    {
+        return score;
     }
 
     public void DestroyPlayer()

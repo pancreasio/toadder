@@ -9,6 +9,8 @@ public class GameFlowManager : MonoBehaviour
 
     public static GameFlowManager gameInstance;
 
+    public delegate void GameplayEvent();
+
     public int SplashScreenIndex;
     public int MenuSceneIndex;
     public int GameOverSceneIndex;
@@ -32,6 +34,7 @@ public class GameFlowManager : MonoBehaviour
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         levelTime = 0f;
+        SyncWithCurrentLevel();
     }
 
     // Update is called once per frame
@@ -65,8 +68,24 @@ public class GameFlowManager : MonoBehaviour
         if (UIManager.currentUiManager != null)
         {
             UIManager.currentUiManager.UpdateLives();
-            UIManager.currentUiManager.UpdateScore();
+            UIManager.currentUiManager.UpdateScore(PlayerController.playerInstance.GetComponent<PlayerController>().GetScore());
             UIManager.currentUiManager.UpdateTime();
+        }
+
+        if (PlayerController.playerInstance != null)
+        {
+            PlayerController.OnScoredPoints += UpdateScore;
+        }
+
+        if (currentSceneIndex == SplashScreenIndex)
+        {
+            GameObject.Find("Splash Screen Manager").GetComponent<SplashScreenManager>().OnSplashesDone += GoToMenu;
+            Debug.Log("it works");
+        }
+
+        if (LevelData.LevelInstance != null)
+        {
+            GameObject.Find("Level").GetComponent<LevelData>().OnMenuButtonPressed += GoToMenu;
         }
     }
 
@@ -109,6 +128,12 @@ public class GameFlowManager : MonoBehaviour
         ChangeScene(GameOverSceneIndex);
     }
 
+    private void UpdateScore()
+    {
+        if(UIManager.currentUiManager != null)
+            UIManager.currentUiManager.UpdateScore(PlayerController.playerInstance.GetComponent<PlayerController>().GetScore());
+    }
+
     private void ChangeScene(int nextSceneIndex)
     {
         levelTime = 0f;
@@ -117,5 +142,7 @@ public class GameFlowManager : MonoBehaviour
 
         currentSceneIndex = nextSceneIndex;
         SceneManager.LoadScene(nextSceneIndex);
+
+        SyncWithCurrentLevel();
     }
 }

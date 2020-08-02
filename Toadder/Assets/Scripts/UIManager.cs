@@ -35,9 +35,9 @@ public class UIManager : MonoBehaviour
         livesText.text = newText;
     }
 
-    public void UpdateScore()
+    public void UpdateScore(int score)
     {
-        string newText = "Score: " + PlayerController.playerInstance.GetComponent<PlayerController>().score.ToString();
+        string newText = "Score: " + score;
         scoreText.text = newText;
     }
 
