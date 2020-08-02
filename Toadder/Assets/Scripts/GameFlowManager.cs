@@ -18,6 +18,7 @@ public class GameFlowManager : MonoBehaviour
     private int currentSceneIndex;
 
     private bool gameWon;
+    private int highscore;
 
     public float levelTime;
 
@@ -36,6 +37,7 @@ public class GameFlowManager : MonoBehaviour
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         levelTime = 0f;
+        highscore = 0;
         SyncWithCurrentLevel();
         SplashScreenManager.OnSplashesDone += GoToMenu;
         MenuController.OnMenuButtonPressed += GoToMenu;
@@ -97,9 +99,11 @@ public class GameFlowManager : MonoBehaviour
 
     private void SetGameOver()
     {
+        UpdateHighscore();
         if (GameOverManager.gameOverManagerInstance != null)
         {
             GameOverManager.gameOverManagerInstance.UpdateFinalScore(PlayerController.playerInstance.GetComponent<PlayerController>().GetScore());
+            GameOverManager.gameOverManagerInstance.UpdateHighscore(highscore);
             if (gameWon)
             {
                 GameOverManager.gameOverManagerInstance.GetComponent<GameOverManager>().ActivateWinText();
@@ -171,5 +175,11 @@ public class GameFlowManager : MonoBehaviour
         SceneManager.LoadScene(nextSceneIndex);
 
         SyncWithCurrentLevel();
+    }
+
+    private void UpdateHighscore()
+    {
+        if (highscore < PlayerController.playerInstance.GetComponent<PlayerController>().GetScore())
+            highscore = PlayerController.playerInstance.GetComponent<PlayerController>().GetScore();
     }
 }

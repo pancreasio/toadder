@@ -9,6 +9,7 @@ public class GameOverManager : MonoBehaviour
     public GameObject winText;
     public GameObject lostText;
     public Text finalScoreText;
+    public Text highscoreText;
 
     public static event GameFlowManager.GameplayEvent OnGameOverLoaded;
 
@@ -26,6 +27,11 @@ public class GameOverManager : MonoBehaviour
     public void UpdateFinalScore(int score)
     {
         finalScoreText.text = "Final Score: " + score + " points";
+    }
+
+    public void UpdateHighscore(int score)
+    {
+        highscoreText.text = "Highscore: " + score + " points";
     }
 
     public void ActivateWinText()
