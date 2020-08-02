@@ -12,6 +12,8 @@ public class LevelData : MonoBehaviour
     public bool IsFinalLevel;
     public bool gamePaused;
 
+    public static event GameFlowManager.GameplayEvent OnLevelInitialized;
+    public static event GameFlowManager.GameplayEvent OnLevelCompleted;
     public event GameFlowManager.GameplayEvent OnMenuButtonPressed;
     public Grid levelGrid;
     public GameObject playerSpawnPoint;
@@ -27,7 +29,9 @@ public class LevelData : MonoBehaviour
 
     void Start()
     {
-        GameFlowManager.gameInstance.StartGame();
+        if(OnLevelInitialized!= null)
+            OnLevelInitialized.Invoke();
+        Objective.OnObjectiveCompleted += UpdateObjectives;
     }
 
     public void UpdateObjectives()
@@ -38,8 +42,12 @@ public class LevelData : MonoBehaviour
             if (objective.completed)
                 completedObjectives++;
         }
-        if(completedObjectives >= objectiveList.Count)
-            GameFlowManager.gameInstance.LevelCompleted();
+
+        if (completedObjectives >= objectiveList.Count)
+        {
+            if(OnLevelCompleted!=null)
+                OnLevelCompleted.Invoke();
+        }
     }
 
     public void ResetCameraTarget(GameObject followTarget)

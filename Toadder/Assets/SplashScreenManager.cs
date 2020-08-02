@@ -7,7 +7,7 @@ public class SplashScreenManager : MonoBehaviour
     public SplashScreen firstSplash;
     public SplashScreen secondSplash;
 
-    public event GameFlowManager.GameplayEvent OnSplashesDone;
+    public static event GameFlowManager.GameplayEvent OnSplashesDone;
 
     void Start()
     {

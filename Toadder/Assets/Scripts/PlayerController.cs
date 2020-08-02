@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     public static GameObject playerInstance;
 
     public int maxLives;
-    public int remainingLives;
+    private int remainingLives;
 
     public int score;
 
@@ -15,6 +15,9 @@ public class PlayerController : MonoBehaviour
     private GameObject FrogInstance;
 
     public static event GameFlowManager.GameplayEvent OnScoredPoints;
+    public static event GameFlowManager.GameplayEvent OnPlayerDeath;
+    public static event GameFlowManager.GameplayEvent OnPlayerLost;
+
 
     // Start is called before the first frame update
     private void Awake()
@@ -34,7 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         FrogController.OnObjectiveComplete += ReportSuccess;
         FrogController.OnNewHeight += AdvancedOnLevel;
-        //Restart();
+        FrogController.OnDeath += ReportDeath;
     }
 
     public void Restart()
@@ -48,11 +51,11 @@ public class PlayerController : MonoBehaviour
         remainingLives = maxLives;
     }
 
-    // Update is called once per frame
-    void Update()
+    public int GetLives()
     {
-        
+        return remainingLives;
     }
+
 
     public GameObject RespawnPlayer(Vector3 respawnPosition)
     {
@@ -64,20 +67,25 @@ public class PlayerController : MonoBehaviour
     {
         remainingLives -= 1;
         if (remainingLives > 0)
-            GameFlowManager.gameInstance.PlayerDied();
+        {
+            if (OnPlayerDeath != null)
+                OnPlayerDeath.Invoke();
+        }
+
         else
         {
             TopUpLives();
-            GameFlowManager.gameInstance.PlayerLost();
+            if(OnPlayerLost != null)
+                OnPlayerLost.Invoke();
         }
 
     }
 
     void ReportSuccess()
     {
-        TopUpLives();
         ScorePoints(400);
-        GameFlowManager.gameInstance.PlayerDied();
+        if(OnPlayerDeath!=null)
+            OnPlayerDeath.Invoke();
     }
 
     void AdvancedOnLevel()

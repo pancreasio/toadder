@@ -7,6 +7,8 @@ public class Objective : MonoBehaviour
     private SpriteRenderer ownRenderer;
 
     public bool completed;
+
+    public static event GameFlowManager.GameplayEvent OnObjectiveCompleted;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,19 +17,14 @@ public class Objective : MonoBehaviour
         completed = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
         {
             ownRenderer.enabled = true;
             completed = true;
-            LevelData.LevelInstance.GetComponent<LevelData>().UpdateObjectives();
+            if(OnObjectiveCompleted != null)
+                OnObjectiveCompleted.Invoke();
         }
     }
 }

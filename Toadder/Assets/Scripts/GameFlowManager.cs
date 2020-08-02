@@ -35,6 +35,13 @@ public class GameFlowManager : MonoBehaviour
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         levelTime = 0f;
         SyncWithCurrentLevel();
+        SplashScreenManager.OnSplashesDone += GoToMenu;
+        MenuController.OnMenuButtonPressed += GoToMenu;
+        MenuController.OnStartButtonPressed += GoToFirstLevel;
+        LevelData.OnLevelInitialized += StartGame;
+        LevelData.OnLevelCompleted += GoToNextLevel;
+        PlayerController.OnPlayerLost += PlayerLost;
+        PlayerController.OnPlayerDeath += PlayerDied;
     }
 
     // Update is called once per frame
@@ -42,7 +49,7 @@ public class GameFlowManager : MonoBehaviour
     {
         levelTime += Time.deltaTime;
         if(UIManager.currentUiManager != null)
-            UIManager.currentUiManager.UpdateTime();
+            UIManager.currentUiManager.UpdateTime(levelTime);
 
         if(Input.GetKeyDown(KeyCode.M))
             GoToMenu();
@@ -50,7 +57,7 @@ public class GameFlowManager : MonoBehaviour
             GoToNextLevel();
     }
 
-    public void PlayerDied()
+    private void PlayerDied()
     {
         if (PlayerController.playerInstance != null && LevelData.LevelInstance != null)
         {
@@ -60,16 +67,16 @@ public class GameFlowManager : MonoBehaviour
         }
 
         if(UIManager.currentUiManager !=null)
-            UIManager.currentUiManager.UpdateLives();
+            UIManager.currentUiManager.UpdateLives(PlayerController.playerInstance.GetComponent<PlayerController>().GetLives());
     }
 
     private void SyncWithCurrentLevel()
     {
         if (UIManager.currentUiManager != null)
         {
-            UIManager.currentUiManager.UpdateLives();
+            UIManager.currentUiManager.UpdateLives(PlayerController.playerInstance.GetComponent<PlayerController>().GetLives());
             UIManager.currentUiManager.UpdateScore(PlayerController.playerInstance.GetComponent<PlayerController>().GetScore());
-            UIManager.currentUiManager.UpdateTime();
+            UIManager.currentUiManager.UpdateTime(levelTime);
         }
 
         if (PlayerController.playerInstance != null)
@@ -77,11 +84,11 @@ public class GameFlowManager : MonoBehaviour
             PlayerController.OnScoredPoints += UpdateScore;
         }
 
-        if (currentSceneIndex == SplashScreenIndex)
-        {
-            GameObject.Find("Splash Screen Manager").GetComponent<SplashScreenManager>().OnSplashesDone += GoToMenu;
-            Debug.Log("it works");
-        }
+        //if (currentSceneIndex == SplashScreenIndex)
+        //{
+        //    GameObject.Find("Splash Screen Manager").GetComponent<SplashScreenManager>().OnSplashesDone += GoToMenu;
+        //    Debug.Log("it works");
+        //}
 
         if (LevelData.LevelInstance != null)
         {
@@ -89,12 +96,12 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
-    public void PlayerLost()
+    private void PlayerLost()
     {
         GoToGameOver();
     }
 
-    public void LevelCompleted()
+    private void LevelCompleted()
     {
         if (LevelData.LevelInstance.GetComponent<LevelData>().IsFinalLevel)
             GoToGameOver();

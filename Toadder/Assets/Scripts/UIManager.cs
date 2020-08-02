@@ -29,9 +29,9 @@ public class UIManager : MonoBehaviour
         
     }
 
-    public void UpdateLives()
+    public void UpdateLives(int lives)
     {
-        string newText = "Lives: " + PlayerController.playerInstance.GetComponent<PlayerController>().remainingLives.ToString();
+        string newText = "Lives: " + lives;
         livesText.text = newText;
     }
 
@@ -41,10 +41,10 @@ public class UIManager : MonoBehaviour
         scoreText.text = newText;
     }
 
-    public void UpdateTime()
+    public void UpdateTime(float time)
     {
-        string newText = "Time: ";
-        newText += Mathf.Round(GameFlowManager.gameInstance.levelTime) + "s";
+        string newText = "Time: " + Mathf.Round(time) + "s";
+        //newText += Mathf.Round(GameFlowManager.gameInstance.levelTime) + "s";
         timeText.text = newText;
     }
 }

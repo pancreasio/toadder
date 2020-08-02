@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class MenuController : MonoBehaviour
 {
+    public static event GameFlowManager.GameplayEvent OnMenuButtonPressed;
+    public static event GameFlowManager.GameplayEvent OnStartButtonPressed;
+
     public void GoToMenu()
     {
+        if(OnMenuButtonPressed!=null)
+            OnMenuButtonPressed.Invoke();
         GameFlowManager.gameInstance.GoToMenu();
     }
 
@@ -16,6 +21,8 @@ public class MenuController : MonoBehaviour
 
     public void StartGame()
     {
-        GameFlowManager.gameInstance.GoToFirstLevel();
+        if(OnStartButtonPressed!=null)
+            OnStartButtonPressed.Invoke();
+        //GameFlowManager.gameInstance.GoToFirstLevel();
     }
 }

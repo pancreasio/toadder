@@ -13,6 +13,7 @@ public class FrogController : MonoBehaviour
 
     public static event GameFlowManager.GameplayEvent OnNewHeight;
     public static event GameFlowManager.GameplayEvent OnObjectiveComplete;
+    public static event GameFlowManager.GameplayEvent OnDeath;
 
 
     // Start is called before the first frame update
@@ -62,21 +63,6 @@ public class FrogController : MonoBehaviour
         }
     }
 
-    //void LateUpdate()
-    //{
-    //    if (platformObject != null)
-    //    {
-    //        transform.Translate(platformObject.parentLane.movementDirection * platformObject.parentLane.movementSpeed * Time.deltaTime);
-    //    }
-    //    else
-    //    {
-    //        if (currentLane != null && !currentLane.walkable)
-    //        {
-    //            Die();
-    //        }
-    //    }
-    //}
-
     bool ChechIfNextToWall(Vector3 movementDirection)
     {
         RaycastHit2D wallHit2D = Physics2D.Raycast(transform.position, movementDirection, travelDistance, WallLayerMask);
@@ -111,14 +97,14 @@ public class FrogController : MonoBehaviour
     {
         if (collision.tag == "Platform" && platformObject.gameObject == collision.gameObject)
             platformObject = null;
-
-        //if (collision.tag == "Lane" && currentLane != null)
-        //    currentLane = null;
     }
 
     void Die()
     {
-        parentController.ReportDeath();
+        if (OnDeath != null)
+        {
+            OnDeath.Invoke();
+        }
         Destroy(this.gameObject);
     }
 
@@ -127,7 +113,6 @@ public class FrogController : MonoBehaviour
         if (OnObjectiveComplete != null)
             OnObjectiveComplete.Invoke();
 
-        //parentController.ReportSuccess();
         Destroy(this.gameObject);
     }
 }
