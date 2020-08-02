@@ -32,15 +32,6 @@ public class GameFlowManager : MonoBehaviour
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         levelTime = 0f;
-        //foreach (int i in LevelIndexList)
-        //{
-        //    if (i == currentSceneIndex)
-        //    {
-        //        PlayerDied();
-        //        SyncWithCurrentLevel();
-        //        break;
-        //    }
-        //}
     }
 
     // Update is called once per frame

@@ -23,18 +23,18 @@ public class FrogController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (platformObject != null)
-        {
-            transform.Translate(platformObject.parentLane.movementDirection * platformObject.parentLane.movementSpeed * Time.deltaTime);
-        }
-        else
-        {
-            if (currentLane != null && !currentLane.walkable)
-            {
-               Die();
-            }
+        //if (platformObject != null)
+        //{
+        //    transform.Translate(platformObject.parentLane.movementDirection * platformObject.parentLane.movementSpeed * Time.deltaTime);
+        //}
+        //else
+        //{
+        //    if (currentLane != null && !currentLane.walkable)
+        //    {
+        //       Die();
+        //    }
 
-        }
+        //}
 
         if (Input.GetKeyDown(KeyCode.UpArrow) && !ChechIfNextToWall(Vector3.up))
             transform.Translate(Vector3.up * travelDistance);
@@ -44,6 +44,22 @@ public class FrogController : MonoBehaviour
             transform.Translate(Vector3.right * travelDistance);
         if (Input.GetKeyDown(KeyCode.LeftArrow) && !ChechIfNextToWall(Vector3.left))
             transform.Translate(Vector3.right * -travelDistance);
+    }
+
+    void LateUpdate()
+    {
+        if (platformObject != null)
+        {
+            transform.Translate(platformObject.parentLane.movementDirection * platformObject.parentLane.movementSpeed * Time.deltaTime);
+        }
+        else
+        {
+            if (currentLane != null && !currentLane.walkable)
+            {
+                Debug.Log("it happened");
+                Die();
+            }
+        }
     }
 
     bool ChechIfNextToWall(Vector3 movementDirection)
@@ -70,9 +86,15 @@ public class FrogController : MonoBehaviour
             ObjectiveCompleted();
     }
 
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Platform")
+            platformObject = collision.GetComponent<TravellingObject>();
+    }
+
     void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Platform" && platformObject != null)
+        if (collision.tag == "Platform" && platformObject.gameObject == collision.gameObject)
             platformObject = null;
 
         //if (collision.tag == "Lane" && currentLane != null)
