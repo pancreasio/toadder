@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public int maxLives;
     private int remainingLives;
 
-    public int score;
+    private int score;
 
     public GameObject FrogPrefab;
     private GameObject FrogInstance;
@@ -102,6 +102,11 @@ public class PlayerController : MonoBehaviour
     public int GetScore()
     {
         return score;
+    }
+
+    public void ResetScore()
+    {
+        score = 0;
     }
 
     public void DestroyPlayer()

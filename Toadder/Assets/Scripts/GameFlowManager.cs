@@ -17,6 +17,8 @@ public class GameFlowManager : MonoBehaviour
     public int FirstLevelIndex;
     private int currentSceneIndex;
 
+    private bool gameWon;
+
     public float levelTime;
 
     void Awake()
@@ -42,16 +44,18 @@ public class GameFlowManager : MonoBehaviour
         LevelData.OnLevelCompleted += GoToNextLevel;
         PlayerController.OnPlayerLost += PlayerLost;
         PlayerController.OnPlayerDeath += PlayerDied;
+        GameOverManager.OnGameOverLoaded += SetGameOver;
+        gameWon = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         levelTime += Time.deltaTime;
-        if(UIManager.currentUiManager != null)
+        if (UIManager.currentUiManager != null)
             UIManager.currentUiManager.UpdateTime(levelTime);
 
-        if(Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M))
             GoToMenu();
         if (Input.GetKeyDown(KeyCode.N))
             GoToNextLevel();
@@ -66,7 +70,7 @@ public class GameFlowManager : MonoBehaviour
                 .GetComponent<LevelData>().playerSpawnPoint.transform.position));
         }
 
-        if(UIManager.currentUiManager !=null)
+        if (UIManager.currentUiManager != null)
             UIManager.currentUiManager.UpdateLives(PlayerController.playerInstance.GetComponent<PlayerController>().GetLives());
     }
 
@@ -84,15 +88,26 @@ public class GameFlowManager : MonoBehaviour
             PlayerController.OnScoredPoints += UpdateScore;
         }
 
-        //if (currentSceneIndex == SplashScreenIndex)
-        //{
-        //    GameObject.Find("Splash Screen Manager").GetComponent<SplashScreenManager>().OnSplashesDone += GoToMenu;
-        //    Debug.Log("it works");
-        //}
-
         if (LevelData.LevelInstance != null)
         {
             GameObject.Find("Level").GetComponent<LevelData>().OnMenuButtonPressed += GoToMenu;
+        }
+
+    }
+
+    private void SetGameOver()
+    {
+        if (GameOverManager.gameOverManagerInstance != null)
+        {
+            GameOverManager.gameOverManagerInstance.UpdateFinalScore(PlayerController.playerInstance.GetComponent<PlayerController>().GetScore());
+            if (gameWon)
+            {
+                GameOverManager.gameOverManagerInstance.GetComponent<GameOverManager>().ActivateWinText();
+            }
+            else
+            {
+                GameOverManager.gameOverManagerInstance.GetComponent<GameOverManager>().ActivateLostText();
+            }
         }
     }
 
@@ -104,7 +119,10 @@ public class GameFlowManager : MonoBehaviour
     private void LevelCompleted()
     {
         if (LevelData.LevelInstance.GetComponent<LevelData>().IsFinalLevel)
+        {
+            gameWon = true;
             GoToGameOver();
+        }
         else
             GoToNextLevel();
     }
@@ -117,6 +135,8 @@ public class GameFlowManager : MonoBehaviour
     public void GoToFirstLevel()
     {
         ChangeScene(FirstLevelIndex);
+        PlayerController.playerInstance.GetComponent<PlayerController>().ResetScore();
+        gameWon = false;
     }
 
     public void GoToNextLevel()
@@ -137,14 +157,14 @@ public class GameFlowManager : MonoBehaviour
 
     private void UpdateScore()
     {
-        if(UIManager.currentUiManager != null)
+        if (UIManager.currentUiManager != null)
             UIManager.currentUiManager.UpdateScore(PlayerController.playerInstance.GetComponent<PlayerController>().GetScore());
     }
 
     private void ChangeScene(int nextSceneIndex)
     {
         levelTime = 0f;
-        if(PlayerController.playerInstance != null)
+        if (PlayerController.playerInstance != null)
             PlayerController.playerInstance.GetComponent<PlayerController>().DestroyPlayer();
 
         currentSceneIndex = nextSceneIndex;
